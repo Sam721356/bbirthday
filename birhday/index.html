@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Unique Special Day</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-pink': '#d83f87',
+                        'secondary-lavender': '#a484b0',
+                        'bg-light': '#fff0f5',
+                        'bg-end': '#fde7ea',
+                        'text-dark': '#444',
+                    },
+                    fontFamily: {
+                        'heading': ['Great Vibes', 'cursive'],
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .phone-container {
+            max-width: 450px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, .15);
+            min-height: 100vh;
+        }
+
+        .gradient-header {
+            background: linear-gradient(270deg, var(--tw-bg-bg-end), var(--tw-bg-bg-light), var(--tw-bg-bg-end));
+            background-size: 400% 400%;
+            animation: gradientMove 8s ease infinite;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            border-bottom-left-radius: 2rem;
+            border-bottom-right-radius: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0 50%; }
+        }
+
+        #mainTitle {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px #d83f87, 0 0 20px #a484b0; }
+            100% { text-shadow: 0 0 25px #d83f87, 0 0 50px #a484b0; }
+        }
+
+        #countdown div div {
+            text-shadow: 0 0 10px rgba(216, 63, 135, .5);
+        }
+
+        .cake-wrapper {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fde7ea;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity .5s ease-out;
+        }
+
+        .cake-wrapper {
+            position: relative;
+            width: 150px;
+            height: 100px;
+            margin-bottom: 2rem;
+        }
+
+        .cake-top, .cake-middle, .cake-bottom {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+        }
+
+        .cake-top {
+            width: 140px;
+            height: 40px;
+            top: 0;
+            background: #fdf5e6;
+            border-bottom: 5px solid #d83f87;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .1);
+            z-index: 30;
+        }
+
+        .icing {
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            top: -5px;
+            background: #fff;
+            border-radius: 50% / 100% 100% 0 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, .1) inset;
+        }
+
+        .candle {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 20px;
+            background: #fff;
+            border-radius: 3px;
+            z-index: 40;
+            animation: bounce .8s infinite alternate;
+        }
+
+        .flame {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 10px;
+            background: #ffaa00;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            border-bottom: 2px solid #ffcc00;
+            box-shadow: 0 0 5px #ffaa00;
+            animation: flicker .2s infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        @keyframes flicker {
+            0% { border-bottom-color: #ffcc00; }
+            50% { border-bottom-color: #ffaa00; }
+            100% { border-bottom-color: #ffcc00; }
+        }
+
+        @keyframes slide-in-fade {
+            0% { transform: translateY(-10px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .animate-slide-in {
+            animation: slide-in-fade .5s ease-out forwards;
+        }
+
+        #giftBox {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: transform .5s ease, box-shadow .5s ease;
+            transform: rotateX(8deg) rotateZ(-5deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, .4), 0 0 0 8px rgba(255, 255, 255, .4) inset;
+        }
+
+        #giftBox:hover {
+            transform: rotateX(0deg) rotateZ(0deg) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, .5), 0 0 0 10px rgba(255, 255, 255, .6) inset;
+        }
+
+        #giftBox.opened {
+            animation: pop .8s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(.9) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(3deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .page-content-wrapper {
+            opacity: 0;
+            transition: opacity .5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans antialiased transition-all duration-700 ease-in-out">
+    <audio id="bgMusic" src="Vicetone_-_Nevada_(mp3.pm).mp3" autoplay loop preload="auto"></audio>
+    <canvas id="particles" class="fixed inset-0 -z-10"></canvas>
+
+    <div id="loading-overlay">
+        <div class="cake-wrapper">
+            <div class="cake-top">
+                <div class="icing"></div>
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+            </div>
+            <div class="cake-middle"></div>
+            <div class="cake-bottom"></div>
+        </div>
+        <p class="font-heading text-4xl text-primary-pink mt-6 animate-pulse">Baking your surprise...</p>
+    </div>
+
+    <div id="pageContentWrapper" class="page-content-wrapper">
+        <div class="phone-container bg-white">
+            <header class="gradient-header text-center text-text-dark">
+                <h1 id="mainTitle" class="font-heading text-6xl text-primary-pink mb-4 leading-tight">Our Special Day</h1>
+                <p class="text-lg font-light mb-6">Counting down to our next amazing chapter!</p>
+                <div id="countdown" data-date="2025-11-14T00:00:00" class="flex justify-center space-x-2 md:space-x-4 px-4">
+                    <div class="countdown-item bg-white p-3 rounded-xl shadow-lg w-1/4">
+                        <div id="days" class="text-3xl md:text-5xl font-bold text-primary-pink">00</div>
+                        <div class="text-xs md:text-sm font-medium mt-1 text-primary-pink">Days</div>
+                    </div>
+                    <div class="countdown-item bg-white p-3 rounded-xl shadow-lg w-1/4">
+                        <div id="hours" class="text-3xl md:text-5xl font-bold text-primary-pink">00</div>
+                        <div class="text-xs md:text-sm font-medium mt-1 text-primary-pink">Hours</div>
+                    </div>
+                    <div class="countdown-item bg-white p-3 rounded-xl shadow-lg w-1/4">
+                        <div id="minutes" class="text-3xl md:text-5xl font-bold text-primary-pink">00</div>
+                        <div class="text-xs md:text-sm font-medium mt-1 text-primary-pink">Minutes</div>
+                    </div>
+                    <div class="countdown-item bg-white p-3 rounded-xl shadow-lg w-1/4">
+                        <div id="seconds" class="text-3xl md:text-5xl font-bold text-primary-pink">00</div>
+                        <div class="text-xs md:text-sm font-medium mt-1 text-primary-pink">Seconds</div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="p-6">
+                <section id="unlockFormSection" class="text-center my-12" data-aos="fade-up">
+                    <h2 class="font-heading text-5xl text-primary-pink mb-4">Access Granted!</h2>
+                    <p class="text-lg text-gray-700 mb-6 font-semibold">Enter the secret code to unlock your surprise!</p>
+                    <form id="unlockForm" class="flex flex-col items-center space-y-4">
+                        <input type="password" id="secretCodeInput" placeholder="Passkey" class="w-full max-w-xs p-3 border-2 border-primary-pink rounded-xl text-center text-xl tracking-wider focus:ring-primary-pink focus:border-primary-pink transition duration-150">
+                        <button type="submit" class="bg-primary-pink hover:bg-secondary-lavender transition duration-300 text-white font-semibold py-3 px-8 rounded-full shadow-xl transform hover:scale-105 active:scale-95 w-full max-w-xs">Unlock Surprise</button>
+                        <p id="unlockMessage" class="text-sm font-medium text-red-500 h-5"></p>
+                    </form>
+                </section>
+
+                <div id="secretContent" class="hidden">
+                    <section class="text-center my-12 relative" data-aos="fade-up" data-aos-delay="100">
+                        <h2 class="text-center font-heading text-4xl text-secondary-lavender mb-12">Your Personal Message</h2>
+                        <button id="revealMessageButton" class="bg-primary-pink hover:bg-secondary-lavender transition duration-300 text-white font-semibold py-3 px-8 rounded-full shadow-xl transform hover:scale-105 active:scale-95 w-full max-w-xs mx-auto mb-6">Click to Read Your Note</button>
+                        <div id="personalMessageContainer" class="hidden animate-slide-in">
+                            <div id="personalMessageDisplay" class="p-6 bg-bg-light rounded-2xl shadow-xl border-4 border-primary-pink max-w-sm mx-auto text-left transition transform duration-300 hover:scale-[1.01]">
+                                <h2 class="font-heading text-3xl text-primary-pink mb-2 text-center">Happy Birthday to You!</h2>
+                                <p class="text-base text-gray-700 leading-snug font-semibold mb-4">Happy birthday to you, my birthday mate. Even though we don't talk a lot and sometimes fought when we were still in secondary school, you are still my birthday mate.</p>
+                                <p class="font-heading text-2xl text-secondary-lavender text-center border-t pt-3 border-gray-300">Happy birthday to us!</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="mt-12 pt-8 border-t border-gray-200" data-aos="fade-up" data-aos-delay="200">
+                        <h2 class="text-center font-heading text-4xl text-secondary-lavender mb-6">My special day</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="relative group rounded-xl overflow-hidden shadow-xl transition duration-500 cursor-pointer aspect-square">
+                                <img src="https://i.ibb.co/j93MfF5j/IMG-20251104-WA0004.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x400/d83f87/ffffff?text=My+Picture+1';" alt="My beautiful memory from November 4, 2025" class="w-full h-full object-cover transition duration-500 transform group-hover:scale-110 group-hover:brightness-75 group-hover:grayscale">
+                            </div>
+                            <div class="relative group rounded-xl overflow-hidden shadow-xl transition duration-500 cursor-pointer aspect-square">
+                                <img src="https://i.ibb.co/fdqfSC5n/Whats-App-Image-2025-11-04-at-10-19-03-ce7971ca.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x400/a484b0/ffffff?text=My+Picture+2';" alt="Another one of my beautiful memories" class="w-full h-full object-cover transition duration-500 transform group-hover:scale-110 group-hover:brightness-75 group-hover:grayscale">
+                            </div>
+                            <div class="relative group rounded-xl overflow-hidden shadow-xl transition duration-500 cursor-pointer aspect-square">
+                                <img src="https://i.ibb.co/Cp7sdgXQ/unnamed.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x400/ffb6c1/d83f87?text=My+Picture+3';" alt="One of my special moments" class="w-full h-full object-cover transition duration-500 transform group-hover:scale-110 group-hover:brightness-75 group-hover:grayscale">
+                            </div>
+                            <div class="relative group rounded-xl overflow-hidden shadow-xl transition duration-500 cursor-pointer aspect-square">
+                                <img src="https://i.ibb.co/q3Sw3nLM/unnamed.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x400/ffb6c1/d83f87?text=My+Picture+4';" alt="A special memory for you" class="w-full h-full object-cover transition duration-500 transform group-hover:scale-110 group-hover:brightness-75 group-hover:grayscale">
+                            </div>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 italic mt-6">(All your pictures are now loaded!)</p>
+                    </section>
+
+                    <section class="mt-12 pt-8 border-t border-gray-200" data-aos="fade-up" data-aos-delay="300">
+                        <h2 class="text-center font-heading text-4xl text-primary-pink mb-8">Your Digital Gift!</h2>
+                        <div id="giftBox" class="p-6 bg-secondary-lavender text-white rounded-2xl cursor-pointer transition transform hover:scale-[1.01] active:scale-[0.99] border-4 border-primary-pink mx-auto max-w-sm">
+                            <div id="giftBoxClosed" class="flex flex-col items-center justify-center space-y-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 text-white animate-pulse">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/>
+                                </svg>
+                                <p class="text-2xl font-bold tracking-wider text-center font-heading">TAP TO OPEN GIFT</p>
+                                <p class="text-sm font-light text-center">(A special flyer is waiting inside!)</p>
+                            </div>
+                            <div id="flyerContent" class="hidden text-center">
+                                <p class="text-lg font-semibold mb-4 border-b border-white/50 pb-2">Surprise Revealed!</p>
+                                <a href="https://i.ibb.co/q3Sw3nLM/unnamed.jpg" download="Birthday_Flyer.jpg" target="_blank" id="flyerLink" class="inline-block relative group">
+                                    <img id="flyerImage" src="https://i.ibb.co/q3Sw3nLM/unnamed.jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x400/ffb6c1/d83f87?text=My+Picture+4';" alt="Birthday Flyer Gift" class="rounded-xl shadow-lg border-2 border-white w-full max-w-xs mx-auto transition-opacity duration-500 group-hover:opacity-80">
+                                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 bg-black/30 rounded-xl">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 text-white">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                                        </svg>
+                                    </div>
+                                </a>
+                                <p class="text-sm mt-3 font-medium">Click the image above to download your flyer!</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+
+            <footer class="text-center py-4 text-xs text-gray-500 border-t border-gray-200 mt-12">Made by ANON</footer>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        const particlesCanvas = document.getElementById('particles');
+        const ctx = particlesCanvas.getContext('2d');
+
+        function setupParticles() {
+            particlesCanvas.width = window.innerWidth;
+            particlesCanvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', setupParticles);
+        setupParticles();
+
+        let particles = Array.from({ length: 60 }, () => ({
+            x: Math.random() * particlesCanvas.width,
+            y: Math.random() * particlesCanvas.height,
+            r: Math.random() * 2 + 1,
+            s: Math.random() * .6 + .2
+        }));
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+            ctx.fillStyle = 'rgba(216, 63, 135, 0.4)';
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+                ctx.fill();
+                p.y -= p.s;
+                if (p.y < 0) {
+                    p.y = particlesCanvas.height;
+                    p.x = Math.random() * particlesCanvas.width;
+                }
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        const music = document.getElementById('bgMusic');
+        function fadeInMusic() {
+            music.volume = 0;
+            music.play().then(() => {
+                const fade = setInterval(() => {
+                    if (music.volume < .6) music.volume += .05;
+                    else clearInterval(fade);
+                }, 200);
+            }).catch(e => {
+                console.log('Autoplay blocked. User interaction required to start music.', e);
+            });
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(fadeInMusic, 2500);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const pageContentWrapper = document.getElementById('pageContentWrapper');
+            const countdownEl = document.getElementById('countdown');
+            const targetDate = new Date(countdownEl.dataset.date).getTime();
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            const mainTitleEl = document.getElementById('mainTitle');
+            const secretContentEl = document.getElementById('secretContent');
+            const unlockFormSectionEl = document.getElementById('unlockFormSection');
+            const unlockFormEl = document.getElementById('unlockForm');
+            const secretCodeInputEl = document.getElementById('secretCodeInput');
+            const unlockMessageEl = document.getElementById('unlockMessage');
+            const SECRET_CODE = 'anon';
+            const revealMessageButton = document.getElementById('revealMessageButton');
+            const personalMessageContainerEl = document.getElementById('personalMessageContainer');
+            let isMessageRevealed = false;
+            const giftBoxEl = document.getElementById('giftBox');
+            const giftBoxClosedEl = document.getElementById('giftBoxClosed');
+            const flyerContentEl = document.getElementById('flyerContent');
+
+            let unlocked = {};
+            let hasCelebrated = false;
+            let isAudioInitialized = false;
+            let unlockSynth;
+            let giftSynth;
+
+            const initializeAudio = async () => {
+                if (isAudioInitialized) return;
+                try {
+                    await Tone.start();
+                    console.log("Audio Context started.");
+                    unlockSynth = new Tone.PolySynth(Tone.Synth, {
+                        oscillator: { type: "square" },
+                        envelope: { attack: .01, decay: .1, sustain: .1, release: .5 }
+                    }).toDestination();
+                    giftSynth = new Tone.MetalSynth({
+                        frequency: 300,
+                        envelope: { attack: .005, decay: .3, release: .05 },
+                        harmonicity: 5.1,
+                        modulationIndex: 10,
+                        resonance: 2000,
+                        octaves: 1
+                    }).toDestination();
+                    isAudioInitialized = true;
+                } catch (e) {
+                    console.error("Failed to start Tone.js audio context:", e);
+                }
+            };
+
+            const playUnlockSound = async () => {
+                await initializeAudio();
+                if (unlockSynth) {
+                    unlockSynth.triggerAttackRelease(["C5", "E5", "G5"], "8n");
+                }
+            };
+
+            const playGiftSound = async () => {
+                await initializeAudio();
+                if (giftSynth) {
+                    giftSynth.triggerAttackRelease("C6", "4n");
+                }
+            };
+
+            setTimeout(() => {
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                    pageContentWrapper.style.opacity = '1';
+                }, 500);
+            }, 2500);
+
+            const revealContent = () => {
+                unlocked.status = true;
+                unlockFormSectionEl.classList.add('hidden');
+                secretContentEl.classList.remove('hidden');
+            };
+
+            const updateCountdown = () => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    if (!hasCelebrated) {
+                        countdownEl.innerHTML = "<div class='text-center text-primary-pink font-heading text-5xl w-full p-4'>It's the Birthday!</div>";
+                        mainTitleEl.textContent = "🎉 It's Our Birthday! 🎂";
+                        for (let i = 0; i < 5; i++) {
+                            setTimeout(() => {
+                                confetti({
+                                    particleCount: 200,
+                                    spread: 100,
+                                    origin: { y: .7 },
+                                    colors: ['#d83f87', '#a484b0', '#fde7ea', '#ffffff']
+                                });
+                            }, i * 1000);
+                        }
+                        hasCelebrated = true;
+                        clearInterval(timer);
+                    }
+                    if (!unlocked.status) {
+                        unlockFormSectionEl.classList.remove('hidden');
+                        secretContentEl.classList.add('hidden');
+                    } else {
+                        revealContent();
+                    }
+                    return;
+                }
+
+                if (!unlocked.status) {
+                    secretContentEl.classList.add('hidden');
+                } else {
+                    revealContent();
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor(distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
+                const minutes = Math.floor(distance % (1000 * 60 * 60) / (1000 * 60));
+                const seconds = Math.floor(distance % (1000 * 60) / 1000);
+
+                daysEl.innerText = String(days).padStart(2, '0');
+                hoursEl.innerText = String(hours).padStart(2, '0');
+                minutesEl.innerText = String(minutes).padStart(2, '0');
+                secondsEl.innerText = String(seconds).padStart(2, '0');
+            };
+
+            if (unlockFormEl) {
+                unlockFormEl.addEventListener('submit', e => {
+                    e.preventDefault();
+                    const code = secretCodeInputEl.value;
+                    unlockMessageEl.classList.remove('animate-slide-in');
+                    if (code === SECRET_CODE) {
+                        playUnlockSound();
+                        unlockMessageEl.textContent = 'Access granted!';
+                        unlockMessageEl.classList.remove('text-red-500');
+                        unlockMessageEl.classList.add('text-green-500', 'animate-slide-in');
+                        setTimeout(revealContent, 500);
+                    } else {
+                        unlockMessageEl.textContent = 'Incorrect code. Try again!';
+                        unlockMessageEl.classList.add('text-red-500');
+                        unlockMessageEl.classList.remove('text-green-500');
+                        secretCodeInputEl.value = '';
+                    }
+                });
+            }
+
+            if (revealMessageButton) {
+                revealMessageButton.addEventListener('click', () => {
+                    if (!isMessageRevealed) {
+                        personalMessageContainerEl.classList.remove('hidden');
+                        revealMessageButton.classList.add('hidden');
+                        isMessageRevealed = true;
+                        confetti({
+                            particleCount: 100,
+                            spread: 70,
+                            origin: { y: .6 },
+                            colors: ['#d83f87', '#a484b0', '#ffffff']
+                        });
+                    }
+                });
+            }
+
+            if (giftBoxEl) {
+                giftBoxEl.addEventListener('click', () => {
+                    if (flyerContentEl.classList.contains('hidden')) {
+                        playGiftSound();
+                        giftBoxEl.classList.add('opened');
+                        giftBoxClosedEl.classList.add('hidden');
+                        flyerContentEl.classList.remove('hidden');
+                        giftBoxEl.classList.remove('bg-secondary-lavender', 'text-white');
+                        giftBoxEl.classList.add('bg-bg-light', 'text-text-dark');
+                        confetti({
+                            particleCount: 150,
+                            spread: 80,
+                            origin: { y: .7 },
+                            colors: ['#a484b0', '#d83f87', '#ffffff']
+                        });
+                    }
+                });
+            }
+
+            updateCountdown();
+            const timer = setInterval(updateCountdown, 1000);
+        });
+    </script>
+</body>
+</html>
